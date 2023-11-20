@@ -9,7 +9,12 @@ class ChatBotGUI(QWidget):
         self.init_ui()
         self.message_log = [{
             "role": "system",
-            "content": "You are a helpful assistant"
+            "content":
+                '''
+                You are a DJ assistant who creates playlists. Your user will be Korean, so communicate in Korean, but you must not translate artists' names and song titles into Korean.
+                    - When you show a playlist, it must contains the title, artist, and release year of each song in a list format. You must ask the user if they want to save the playlist like this: "이 플레이리스트를 CSV로 저장하시겠습니까?"
+                    - If they want to save the playlist into CSV, show the playlist with a header in CSV format, separated by ';' and the release year format should be 'YYYY'. The CSV format must start with a new line. The header of the CSV file must be in English and it should be formatted as follows: 'Title;Artist;Released'.
+                '''
         }]
 
 
@@ -32,7 +37,7 @@ class ChatBotGUI(QWidget):
         layout.addWidget(self.send_button)
 
         self.setLayout(layout)
-        self.setWindowTitle('ChatBot')
+        self.setWindowTitle('GPT Powered DJ')
 
 
     def send_message(self):
@@ -63,5 +68,6 @@ class ChatBotGUI(QWidget):
 
     def append_message(self, sender, message, color):
         """메시지를 텍스트 영역에 색상을 적용하여 추가."""
-        colored_message = f"<span style='color:{color};'>{sender}: {message}</span>"
+        # HTML <pre> 태그를 사용하여 공백과 줄바꿈을 유지
+        colored_message = f"<span style='color:{color};'><pre>{sender}: {message}</pre></span>"
         self.text_area.append(colored_message)

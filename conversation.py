@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 # OpenAI 챗봇 모델에 메시지를 보내고 응답하는 하수
 def send_message(message_log):

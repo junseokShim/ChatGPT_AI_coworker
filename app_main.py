@@ -1,7 +1,7 @@
 import sys
 from src.chatbot_ui.chatbotgui import *
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
