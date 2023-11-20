@@ -6,7 +6,7 @@
 ### File Info
 - basic_api_call.py : chatgpt api 기본 호출 소스
 - conversation.py : chatgpt api 기반 대화 소스(터미널 기반)
-- pyqt_conversation_app.py : chatgpt api 기반 대화 소스(pyqt5 기반)
+- app_main.py : chatgpt api 기반 대화 소스(pyqt5 기반), 해당 프로젝트에서 메인 함수 역할
 
 ### Libaraty install
 ```
