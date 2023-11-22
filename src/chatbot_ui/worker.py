@@ -1,7 +1,7 @@
 import openai
 from PyQt5.QtCore import pyqtSignal, QThread
 
-openai.api_key = "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"
+# openai.api_key = "sk-gDo2e82Td99sDz7pQikiT3BlbkFJ7E4 ~~~ FqyQt3UCPp03DZq4B"
 
 class Worker(QThread):
     response_signal = pyqtSignal(str)

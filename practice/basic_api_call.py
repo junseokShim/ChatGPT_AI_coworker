@@ -1,6 +1,6 @@
 import openai
 
-openai.api_key = "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"
+#openai.api_key = "sk-gDo2e82Td99sDz7pQikiT3BlbkFJ7E4 ~~~ FqyQt3UCPp03DZq4B"
 
 def ask_to_gpt_35_turbo(user_input):  
     response = openai.ChatCompletion.create(

@@ -1,4 +1,5 @@
 from src.chatbot_ui.worker import *
+from src.utils import * # save_to_csv, extract_csv_to_dataframe
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QLineEdit, QPushButton, QProgressDialog
 
 
@@ -33,7 +34,7 @@ class ChatBotGUI(QWidget):
         layout.addWidget(self.input_line)
 
         self.send_button = QPushButton('Send')
-        self.send_button.clicked.connect(self.send_message)
+        self.send_button.clicked.connect(self.on_send)
         layout.addWidget(self.send_button)
 
         self.setLayout(layout)
@@ -59,12 +60,43 @@ class ChatBotGUI(QWidget):
         self.worker.response_signal.connect(self.update_gui)
         self.worker.start()
 
+    def on_send(self):
+        user_input = self.user_entry.text()
+        self.user_entry.clear()
+
+        if user_input.lower() == "quit":
+            self.close()
+            return
+
+        # 여기서 생각 중... 팝업과 같은 처리를 하고, 메시지 로그 처리 및 응답 처리를 수행해야 함
+        # 예: response = send_message(user_input)
+        # ...
+
+        # 예시 응답을 채팅 창에 표시
+        self.send_message()
+
 
     def update_gui(self, response):
         """GUI 업데이트: 챗봇 응답을 텍스트 영역에 추가."""
-        self.append_message("Assistant", response, "white")  # 빨간색으로 챗봇 메시지 추가
+
+        df = extract_csv_to_dataframe(response)
         self.progress_dialog.close()
-        
+
+        if df is not None:
+            file_save_result = save_to_csv(df)
+            print(file_save_result)
+            if file_save_result == '저장을 취소했습니다.':
+                response = file_save_result
+            else:
+                response = file_save_result + '\n' + response
+
+        self.message_log.append({
+            "role" : "assistant",
+            "content" : response
+        })
+
+        self.append_message("Assistant", response, "white")  # 빨간색으로 챗봇 메시지 추가
+
 
     def append_message(self, sender, message, color):
         """메시지를 텍스트 영역에 색상을 적용하여 추가."""
