@@ -36,3 +36,21 @@ def extract_csv_to_dataframe(response):
             return None
     else:   
         return None
+
+
+def save_playlist_as_csv(playlist_csv):
+    '''
+    save playlists using function call
+    '''
+    if ";" in playlist_csv:
+        lines = playlist_csv.strip().split("\n")
+        csv_data = []
+
+        for line in lines:
+            if ";" in line:
+                csv_data.append(line.split(";"))
+
+        if len(csv_data)>0:
+            df = pd.DataFrame(csv_data[1:], columns=csv_data[0])
+            return save_to_csv(df)
+    return f"저장에 실패했습니다. \n저장에 실패한 내용은 다음과 같습니다. \n{playlist_csv}"
