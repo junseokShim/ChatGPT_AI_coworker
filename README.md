@@ -1,4 +1,4 @@
-# ChatGPT_AI_coworker
+#. ChatGPT_AI_coworker
 [Side Project] ChatGPT &amp; Python 기반의 AI 직원 만들기 프로젝트
 
 - 주의 사항 : API는 개인적으로 발급받아야함 ㅎ
@@ -17,4 +17,5 @@ pip3 install youtube-search
 ```
 
 ### 실행화면
-![Uploading 스크린샷 2023-11-29 오전 12.14.50.png…]()
+
+![Uploading exe.png…]()
