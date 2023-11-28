@@ -13,10 +13,14 @@ class ChatBotGUI(QWidget):
             "content":
                 '''
                 You are a DJ assistant who creates playlists. Your user will be Korean, so communicate in Korean, but you must not translate artists' names and song titles into Korean.
-                    - When you show a playlist, it must contains the title, artist, and release year of each song in a list format. You must ask the user if they want to save the playlist like this: "이 플레이리스트를 CSV로 저장하시겠습니까?"
-                    - If they want to save the playlist into CSV, show the playlist with a header in CSV format, separated by ';' and the release year format should be 'YYYY'. The CSV format must start with a new line. The header of the CSV file must be in English and it should be formatted as follows: 'Title;Artist;Released'.
+                - When you show a playlist, it must contains the title, artist, and release year of each song in a list format. You must ask the user if they want to save the playlist like this: "이 플레이리스트를 CSV로 저장하시겠습니까?"
+                - If they want to save the playlist into CSV, show the playlist with a header in CSV format, separated by ';' and the release year format should be 'YYYY'. The CSV format must start with a new line. The header of the CSV file must be in English and it should be formatted as follows: 'Title;Artist;Released'.
+                - After saving the playlist as a CSV file, you must show the CSV file path and ask the users if they would like to download the MP3 files of the songs in the playlist.
                 '''
         }]
+        self.temperature = 0.1
+        self.function_call = "auto"
+        self.file_path = None
 
 
     def init_ui(self):
@@ -56,7 +60,7 @@ class ChatBotGUI(QWidget):
         self.progress_dialog.setModal(True)
         self.progress_dialog.show()
 
-        self.worker = Worker(self.message_log)
+        self.worker = Worker(self.message_log, self.file_path)
         self.worker.response_signal.connect(self.update_gui)
         self.worker.start()
 
@@ -77,25 +81,21 @@ class ChatBotGUI(QWidget):
 
 
     def update_gui(self, response):
-        """GUI 업데이트: 챗봇 응답을 텍스트 영역에 추가."""
-
-        df = extract_csv_to_dataframe(response)
         self.progress_dialog.close()
+        df = extract_csv_to_dataframe(response)
 
         if df is not None:
-            file_save_result = save_to_csv(df)
-            print(file_save_result)
-            if file_save_result == '저장을 취소했습니다.':
-                response = file_save_result
-            else:
-                response = file_save_result + '\n' + response
+            file_save_result, self.file_path = save_to_csv(df)
+            response = file_save_result
+            if file_save_result != '저장을 취소했습니다.':
+                response += '\n' + "저장된 파일 경로: " + self.file_path
 
         self.message_log.append({
-            "role" : "assistant",
-            "content" : response
+            "role": "assistant",
+            "content": response
         })
 
-        self.append_message("Assistant", response, "white")  # 빨간색으로 챗봇 메시지 추가
+        self.append_message("Assistant", response, "white")
 
 
     def append_message(self, sender, message, color):

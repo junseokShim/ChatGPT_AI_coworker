@@ -2,10 +2,9 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 import pandas as pd
 import sys
 
-# response에 CSV 형식이 있는지 확인하고 있으면 저장하기
-def save_to_csv(df):
-    #app = QApplication(sys.argv)  # QApplication 인스턴스 생성
 
+def save_to_csv(df):
+    
     file_path, _ = QFileDialog.getSaveFileName(
         None, 
         "Save File", 
@@ -14,15 +13,16 @@ def save_to_csv(df):
     )  # 파일 저장 대화상자 열기
 
     if file_path:
+        print(df)
         df.to_csv(file_path, index=False, lineterminator='\n')
-        return f'파일을 저장했습니다. 저장 경로는 다음과 같습니다.\n{file_path}\n'
-    else:
-        return '저장을 취소했습니다.'
+        return f'파일을 저장했습니다. 저장 경로는 다음과 같습니다.\n{file_path}\n 이 플레이리스트의 음원을 내려받으시겠습니까?', file_path
 
-# 주의: PyQt5 애플리케이션은 이 스크립트가 실행되는 환경에 따라 GUI를 띄울 수도 있고 띄울 수 없을 수도 있습니다.
+    else:
+        return '저장을 취소했습니다.', None
 
 
 def extract_csv_to_dataframe(response):
+
     if ";" in response:
         response_lines=response.strip().split("\n")
         csv_data=[]
@@ -53,4 +53,5 @@ def save_playlist_as_csv(playlist_csv):
         if len(csv_data)>0:
             df = pd.DataFrame(csv_data[1:], columns=csv_data[0])
             return save_to_csv(df)
+
     return f"저장에 실패했습니다. \n저장에 실패한 내용은 다음과 같습니다. \n{playlist_csv}"

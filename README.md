@@ -12,4 +12,8 @@
 ```
 pip3 install PyQt5
 pip3 install openai
+pip3 install yt-dlp
+pip3 install youtube-search
 ```
+
+### 실행화면

@@ -107,5 +107,5 @@ def run_conversation():
 
 
 if __name__ == '__main__':
-    openai.api_key = "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"
+    #openai.api_key = "sk -gDo2e82  Td99sDz7pQikiT3BlbkFJ7E4FqyQt3UCPp03DZq4B"
     print(run_conversation())

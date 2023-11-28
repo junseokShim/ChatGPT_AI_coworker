@@ -2,6 +2,7 @@ import json
 import openai
 
 from src.chatbot_ui.worker import *
+from src.download_youtube_audio import *
 from src.utils import * # save_to_csv, extract_csv_to_dataframe
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QLineEdit, QPushButton, QProgressDialog
 
@@ -18,6 +19,7 @@ class ChatBotGUI(QWidget):
             '''
             You are a DJ assistant who creates playlists. Your user will be Korean, so communicate in Korean, but you must not translate artists' names and song titles into Korean.
             - At first, suggest songs to make a playlist based on user's request. The playlist must contain the title, artist, and release year of each song in a list format. You must ask the user if they want to save the playlist like this: "이 플레이리스트를 CSV로 저장하시겠습니까?
+            - After saving the playlist as a CSV file, you must show the CSV file path and ask the users if they would like to download the MP3 files of the songs in the playlist.
             '''
         }]
         self.functions = [
@@ -33,6 +35,20 @@ class ChatBotGUI(QWidget):
                         },
                     },
                     "required": ["playlist_csv"],
+                },
+            },
+            {
+                "name": "download_youtube_audio",
+                "description": "Download mp3 of songs in the recent CSV file",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "csv_file_path": {
+                            "type": "string",
+                            "description": "The recent csv file path",
+                        },
+                    },
+                    "required": ["csv_file_path"],
                 },
             }
         ]
@@ -104,6 +120,7 @@ class ChatBotGUI(QWidget):
         if response_message.get("function_call"):
             available_functions = {
                 "save_playlist_as_csv": save_playlist_as_csv,
+                "download_youtube_audio": download_youtube_audio,
             }
             function_name = response_message["function_call"]["name"]
             function_to_call = available_functions[function_name]
@@ -115,7 +132,7 @@ class ChatBotGUI(QWidget):
             self.message_log.append({
                 "role": "function",
                 "name": function_name,
-                "content": function_response,
+                "content": f'{function_response}',
             })
             response = openai.ChatCompletion.create(
                 model="gpt-4",
