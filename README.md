@@ -20,4 +20,5 @@ pip3 install youtube-search
 ```
 
 ### 실행화면
-image.png
+
+![image](https://github.com/junseokShim/ChatGPT_AI_coworker/assets/88752654/dff25eed-448a-4b75-b9eb-d8371cddda29)
